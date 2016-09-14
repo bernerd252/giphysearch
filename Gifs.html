@@ -6,9 +6,6 @@
 			margin: 10px;
 		}
 
-		img{
-			float:left;
-		}
 	</style>
 </head>
 <body>
@@ -44,6 +41,7 @@
 		var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + gif + "&api_key=dc6zaTOxFJmzC";
 		console.log(gif)
 		console.log(queryURL)
+		var choices = [];
 		
 		// Creates AJAX call for the specific movie being 
 		$.ajax({url: queryURL, method: 'GET'}).done(function(response) {
@@ -58,37 +56,54 @@
 
                 for (var i = 0; i < 15; i++) {
                 	
+                	var j = Math.floor((Math.random() * results.length) + 1)
 
+                	console.log(results.length)
+                	console.log("j " + j)
+                	
                     //------------put step 3 in between these dashes--------------------
                     var animalDiv = $('<div class="item">')
-                    // var rating = results[i].rating;
-                    // var p = $('<p>').text( "Rating: " + rating);
+
+                    var rating = results[i].rating;
+                    console.log("rating " + rating)
+                    var pOne = $('<p>').text( "Rating: " + rating);
+                    animalDiv.append(pOne);
                     var animalImage = $('<img>');
-                        animalImage.attr('src', results[i].images.fixed_height_still.url);
-                        animalImage.attr("data-still", results[i].images.fixed_height_still.url);
-                        animalImage.attr("data-animate", results[i].images.fixed_height.url);
+                        animalImage.attr('src', results[j].images.fixed_height_still.url);
+                        animalImage.attr("data-still", results[j].images.fixed_height_still.url);
+                        animalImage.attr("data-animate", results[j].images.fixed_height.url);
                         animalImage.attr("data-state", "still");
                         $("animalImage").addClass("gif")
+
                     // animalDiv.append(p)
                     animalDiv.append(animalImage)
 
                     $('#gifsView').prepend(animalDiv);
                     //--------------------------------
-                }
+               
+                $(animalImage).on("click",function(){
+				console.log("click")
+				 var state = $(this).attr('data-state');
+				 if ( state == 'still'){
+		                $(this).attr('src', $(this).data('animate'));
+		                $(this).attr('data-state', 'animate');
+		            }else{
+		                $(this).attr('src', $(this).data('still'));
+		                $(this).attr('data-state', 'still');
+		            }
 
-            });
-	}
-
-	$(".gif").on("click",function(){
-		 if ( state == 'still'){
-                $(this).attr('src', $(this).data('animate'));
-                $(this).attr('data-state', 'animate');
-            }else{
-                $(this).attr('src', $(this).data('still'));
-                $(this).attr('data-state', 'still');
-            }
+		            console.log("state " + state)
+		        });
+       	 }
+        
+        
 	});
 
+}
+           
+	
+
+	
 	// Generic function for displaying movie data 
 	function renderButtons(){ 
 
@@ -129,6 +144,7 @@
 
 	// This calls the renderButtons() function
 	renderButtons();
+
 
 
 </script>
